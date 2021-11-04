@@ -1,0 +1,7 @@
+{
+  "license": "MIT",
+  "name": "@dailei/runtime-flow-client",
+  "private": "true",
+  "type": "module",
+  "version": "0.1.0"
+}

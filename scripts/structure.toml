@@ -1,0 +1,8 @@
+dest = "dist/"
+destOfWeb = "dist/web/"
+
+src = "src/"
+srcOfClient = "packages/client/src/"
+srcOfWeb = "packages/client/public/*"
+
+test = "test/"
