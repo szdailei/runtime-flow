@@ -1,4 +1,4 @@
-import { getApiServerEndPoint } from './network.js';
+import globalVars from '../global-vars.js';
 
 async function createErrorByRes(res) {
   const resBody = await res.text();
@@ -29,12 +29,12 @@ async function parseResBody(res, resType) {
   }
 }
 
-async function request(query) {
+async function request(body) {
   const resType = 'json';
-  const endPoint = getApiServerEndPoint();
+  const endPoint = globalVars.apiServerEndPoint;
   const options = {
     method: 'POST',
-    body: query ? JSON.stringify({ query }) : null,
+    body: body ? JSON.stringify(body) : null,
   };
 
   let data;
@@ -42,15 +42,15 @@ async function request(query) {
   try {
     const res = await fetch(endPoint, options);
     if (!res.ok) {
-      error = await createErrorByRes(res); // Non-200 response.
-      return { data, error };
+      const resNotOkError = await createErrorByRes(res);
+      return { data, error: resNotOkError };
     }
 
-    const graphqlResult = await parseResBody(res, resType);
-    if (!graphqlResult) error = new Error('resType wrong or response body format wrong');
-    if (graphqlResult.errors) error = createErrorByResult(graphqlResult);
+    const serverResult = await parseResBody(res, resType);
+    if (!serverResult) error = new Error('resType wrong or response body format wrong');
+    if (serverResult.errors) error = createErrorByResult(serverResult);
 
-    data = graphqlResult.data || graphqlResult;
+    data = serverResult.data || serverResult;
   } catch (httpError) {
     error = httpError;
   }

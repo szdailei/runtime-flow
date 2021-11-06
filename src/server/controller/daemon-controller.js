@@ -1,6 +1,9 @@
-import log from './log.js';
-
 const serverStatus = [];
+
+function log(msg) {
+  // eslint-disable-next-line no-console
+  console.log(msg);
+}
 
 function exitProcess() {
   let active = false;
@@ -12,11 +15,11 @@ function exitProcess() {
 }
 
 async function stop(eventType, servers) {
-  log.warn(`\n${eventType} received, all servers are stoping ...`);
+  log(`\n${eventType} received, all servers are stoping ...`);
 
   servers.forEach((server, index) => {
     function onServerClosed() {
-      log.warn(`${serverStatus[index].name} stoped on port ${serverStatus[index].port}`);
+      log(`${serverStatus[index].name} stoped on port ${serverStatus[index].port}`);
       serverStatus[index].active = false;
       exitProcess();
     }
@@ -45,7 +48,7 @@ function registerRunningServers(servers) {
       active: true,
     };
     serverStatus.push(status);
-    log.warn(`${status.name} started on port ${status.port}`);
+    log(`${status.name} started on port ${status.port}`);
   });
 }
 

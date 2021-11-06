@@ -5,7 +5,7 @@ import { getStructure } from '../structure.js';
 import { plugins, rollupBuild } from './rollup.js';
 
 async function buildApp() {
-  const { srcOfClient, srcOfWeb, destOfWeb } = await getStructure();
+  const { srcOfClient, srcOfHtml, destOfWeb } = await getStructure();
 
   const browserPlugins = [...plugins]
   browserPlugins.push(
@@ -27,7 +27,7 @@ async function buildApp() {
 
   await rollupBuild(inputOptions, outputOptions);
 
-  shell.cp('-R', srcOfWeb, destOfWeb);
+  shell.cp('-R', srcOfHtml, destOfWeb);
 }
 
 export default buildApp;

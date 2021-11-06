@@ -26,9 +26,9 @@
     "access": "public"
   },
   "scripts": {
-    "format": "prettier --write packages/**/* src/**/*",
-    "lint": "eslint packages src --ext .js,.jsx,.mjs",
-    "stylelint": "stylelint --syntax \"css-in-js\" \"packages/client/src/**/*.{jsx,tsx}\"",
+    "format": "prettier --write src/**/*",
+    "lint": "eslint src --ext .js,.jsx,.mjs",
+    "stylelint": "stylelint --syntax \"css-in-js\" \"src/client/**/*.{jsx,tsx}\"",
     "clean": "rimraf dist/",
     "build": "cross-env NODE_ENV=production node scripts/rollup/cli-build.js",
     "build:dev": "cross-env NODE_ENV=development node scripts/rollup/cli-build.js",
@@ -45,7 +45,7 @@
     "@stitches/react": "^1.2.5",
     "dagre": "^0.8.5",
     "history": "^5.0.1",
-    "loglevel": "^1.7.1",
+    "mime": "^3.0.0",
     "minimist": "^1.2.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

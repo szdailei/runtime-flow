@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 import { exec } from 'child_process';
 import minimist from 'minimist';
-import { runtimeFlowServer } from './dist/server.js';
+import server from './dist/server.js';
 
 const HELP = `Usage: runtime-flow [options]
 
@@ -10,7 +10,7 @@ start runtime-flow server and browser.
 
 Options:
   -p, --port  Port of web. default: "3000".
-  -flow, --flow   Directory of flow file. default: "./".
+  -s, --storage  Directory of storage files. default: "./".
   -w, --web   Directory of index.html. default: "{server-dir}/web".
   -h, --help  Display help for command.`;
 
@@ -41,7 +41,7 @@ async function main() {
       help: 'h',
       port: 'p',
       web: 'w',
-      flow: 'f',
+      storage: 's',
     },
     unknown: () => {
       console.log(HELP);
@@ -54,11 +54,11 @@ async function main() {
     process.exit(0);
   }
 
-  const { port, web, flow } = args;
-  const actualPort = await runtimeFlowServer({ port, web, flow });
+  const { port, web, storage } = args;
+  const actualPort = await server({ port, web, storage });
 
   const url = `http://localhost:${actualPort}`;
-//  openUrl(url);
+  openUrl(url);
 }
 
 main();

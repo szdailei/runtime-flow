@@ -5,10 +5,10 @@ import replace from '@rollup/plugin-replace';
 import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 
-const mode = process.env.NODE_ENV;
+const compileMode = process.env.NODE_ENV;
 const plugins = [
   nodeResolve({ extensions: ['.mjs', '.js', '.jsx'], preferBuiltins: false }),
-  replace({ 'process.env.NODE_ENV': JSON.stringify(mode), preventAssignment: true }),
+  replace({ 'process.env.NODE_ENV': JSON.stringify(compileMode), preventAssignment: true }),
   commonjs(),
   babel({
     babelHelpers: 'bundled',

@@ -1,8 +1,8 @@
 dest = "dist/"
 destOfWeb = "dist/web/"
 
-src = "src/"
-srcOfClient = "packages/client/src/"
-srcOfWeb = "packages/client/public/*"
+srcOfServer = "src/server"
+srcOfClient = "src/client/"
+srcOfHtml = "src/client/html/*"
 
 test = "test/"

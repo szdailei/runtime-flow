@@ -16,17 +16,21 @@ function isPortAvailable(port) {
   });
 }
 
-async function findTheFirstAvailablePort(startPort) {
+async function findTheFirstAvailablePort(startPort, { amount } = {}) {
   let staticServerPort = startPort;
 
+  const range = amount || 1;
+
   while (staticServerPort < 65535) {
-    if (await isPortAvailable(staticServerPort)) {
-      return staticServerPort;
+    for (let i = 0; i < range; i += 1) {
+      if (await isPortAvailable(staticServerPort)) {
+        return staticServerPort;
+      }
+      staticServerPort += 1;
     }
-    staticServerPort += 1;
   }
 
-  throw new Error(`No available port start ${startPort}`);
+  return null;
 }
 
 export { isPortAvailable, findTheFirstAvailablePort };

@@ -4,12 +4,12 @@ import { getStructure } from '../structure.js';
 import { plugins, rollupBuild } from './rollup.js';
 
 async function buildServer() {
-  const { dest, src } = await getStructure();
+  const { dest, srcOfServer } = await getStructure();
 
   const nodePlugins = [...plugins]
   nodePlugins.push(external());
   const inputOptions = {
-    input: join(src, 'server.js'),
+    input: join(srcOfServer, 'server.js'),
     plugins: nodePlugins,
   };
 
