@@ -1,17 +1,9 @@
-import globalVars from './global-vars.js';
-import { getApiServerPort, getApiServerPath } from '../api-server-vars.js';
+import { request } from './network/index.js';
 
-function setServerEndPoint(apiServerEndPoint) {
-  globalVars.apiServerEndPoint = apiServerEndPoint;
-}
+const init = () => {
+  request.init();
+};
 
-function init() {
-  const { protocol, hostname, port } = window.location;
-  const apiServerPort = getApiServerPort(port);
-  const apiServerPath = getApiServerPath();
-  const apiServerEndPoint = `${protocol}//${hostname}:${apiServerPort}${apiServerPath}`;
-
-  setServerEndPoint(apiServerEndPoint);
-}
+init.isFinished = () => request.isFinished();
 
 export default init;

@@ -1,13 +1,17 @@
 /* eslint-disable no-param-reassign */
-import React from 'react';
-import { ArrowHeadType } from 'react-flow-renderer';
-import globalVars from '../global-vars.js';
-import useRemoteData from '../network/cache.js';
-import { Error } from '../components/index.js';
-import Layout from '../flowchart/Layout.jsx';
+import React, { useRef } from 'react';
+import defaultVars from '../default-vars.js';
+import { useRemoteData } from '../network/index.js';
+import { Error } from '../page-components/index.js';
+import { ColumnsResizableWrap, LeftBox, RightBoxWrap, RightBox, Handler } from '../components/ColumnsResizable.jsx';
+import Flow from '../flow/Flow.jsx';
+import DebugSites from '../debug-site/DebugSites.jsx';
 
 function Home() {
-  const { elementsFile } = globalVars.flowchart;
+  const leftBoxRef = useRef();
+  const handlerRef = useRef();
+
+  const { elementsFile } = defaultVars.flowchart;
   const query = {
     command: 'getFile',
     params: elementsFile,
@@ -17,17 +21,27 @@ function Home() {
   if (error) return <Error error={error} />;
   if (!data) return null;
 
-  const initialElements = JSON.parse(data);
+  const  { debugSites, elements } = JSON.parse(data);
+  console.log("debugSites",debugSites)
+  console.log("elements",elements)
   const position = { x: 0, y: 0 };
-  initialElements.forEach((element) => {
+  elements.forEach((element) => {
     element.position = position;
-    if (element.source && element.target) {
-      element.type = 'default';
-      element.arrowHeadType = element.arrowHeadType || ArrowHeadType.Arrow;
-    }
   });
 
-  return <Layout initialElements={initialElements} />;
+  return (
+    <ColumnsResizableWrap leftBoxRef={leftBoxRef}>
+      <LeftBox ratio={0.7} ref={leftBoxRef}>
+        <Flow initialElements={elements} />
+      </LeftBox>
+      <RightBoxWrap leftBoxRef={leftBoxRef} handlerRef={handlerRef}>
+        <Handler ref={handlerRef} />
+        <RightBox>
+          <DebugSites debugSites={debugSites} />
+        </RightBox>
+      </RightBoxWrap>
+    </ColumnsResizableWrap>
+  );
 }
 
 export default Home;

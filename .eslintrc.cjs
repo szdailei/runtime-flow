@@ -1,4 +1,5 @@
 module.exports = {
+  ignorePatterns: ['dist'],
   parserOptions: {
     requireConfigFile: false,
     sourceType: 'module',
@@ -22,7 +23,9 @@ module.exports = {
   extends: ['airbnb', 'plugin:react-hooks/recommended', 'prettier'],
   rules: {
     'import/extensions': 'off',
-    'import/no-extraneous-dependencies': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'import/no-unresolved': 'off',
+    'import/no-extraneous-dependencies': 'off',
+    'react/function-component-definition': 'off',
   },
 };

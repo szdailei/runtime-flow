@@ -1,9 +1,9 @@
 import { join, isAbsolute } from 'path';
-import staticServer from './static-server/static-server.js';
-import apiServer from './api-server/api-server.js';
+import staticServer from './static-server/index.js';
+import apiServer from './api-server/index.js';
 import defaultVars from './default-vars.js';
-import { findTheFirstAvailablePort } from './controller/net-port-checker.js';
-import { registerRunningServers } from './controller/daemon-controller.js';
+import { getTheScriptDir } from './utils/index.js';
+import { findTheFirstAvailablePort, registerRunningServers } from './controller/index.js';
 import { getApiServerPort } from '../api-server-vars.js';
 
 function log(msg) {
@@ -11,40 +11,35 @@ function log(msg) {
   console.log(msg);
 }
 
-async function server({ port, web, storage } = {}) {
-  const theScriptDir = new URL('.', import.meta.url).pathname;
+async function server({ port, dir, name } = {}) {
+  const theScriptDir = getTheScriptDir();
   const theWorkingDir = process.cwd();
 
   let staticServerPort = port || defaultVars.staticServer.port;
 
   if (!port) {
-    staticServerPort = await findTheFirstAvailablePort(staticServerPort, { amount: 2 });
+    staticServerPort = await findTheFirstAvailablePort(staticServerPort, { amount: 3 });
     if (!staticServerPort) {
       log('No availablePort');
       process.exit(1);
     }
   }
 
-  let staticRoot;
-  if (!web) {
-    staticRoot = join(theScriptDir, defaultVars.staticServer.root);
-  } else {
-    staticRoot = isAbsolute(web) ? web : join(theWorkingDir, web);
-  }
+  const staticRoot = join(theScriptDir, defaultVars.staticServer.root);
 
   const sServer = staticServer(staticServerPort, { root: staticRoot });
-  sServer.name = `${defaultVars.name} web-server`;
+  sServer.name = `${name} web-server`;
 
   let storageRoot;
-  if (!storage) {
+  if (!dir) {
     storageRoot = join(theWorkingDir, defaultVars.storage.root);
   } else {
-    storageRoot = isAbsolute(storage) ? storage : join(theWorkingDir, storage);
+    storageRoot = isAbsolute(dir) ? dir : join(theWorkingDir, dir);
   }
 
   const aServerPort = getApiServerPort(staticServerPort);
-  const aServer = apiServer(aServerPort, { root: storageRoot });
-  aServer.name = `${defaultVars.name} api-server`;
+  const aServer = apiServer(aServerPort, { storageRoot, loggerFileSuffix: defaultVars.logger.fileSuffix });
+  aServer.name = `${name} api-server`;
 
   registerRunningServers([sServer, aServer]);
 
